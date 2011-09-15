@@ -1,0 +1,46 @@
+该项目是一个通用的可移植 makefile 项目，如果改变编译环境，只需少量修改即可。
+
+目录具体说明：
+.
+├── doc                             //项目文档目录
+├── example                         //测试由 include和src 编译出来库
+│   ├── foo.cpp
+│   ├── foo.h
+│   ├── main.cpp
+│   └── Makefile
+├── include                         //项目头文件目录
+│   ├── matrixhelper.h
+│   └── stringhelper.h
+├── src                             //项目源码文件目录
+│   ├── Makefile
+│   ├── matrixhelper.cpp
+│   └── stringhelper.cpp
+├── mak                             //通用 Makefile 配置目录
+│   ├── Makefile                    //该项目makefile文件
+│   └── make.settings               //需要改变编译环境，只需修改该文件即可
+├── out                             //编译临时输出以及编译结果
+│   ├── AIX32
+│   ├── AIX64
+│   ├── Linux32
+│   └── Linux64
+└── todo                            //Todo 文件
+
+目前该项目支持如下几种编译环境:
+    AIX32
+    AIX64
+    Linux32
+    Linux64
+
+使用方法：
+编译 64 位 release 版本可以执行命令：
+ make BITS64=1
+编译 32 位 debug 版本可以执行命令：
+ make DEBUG=1
+
+在真实的项目应用中，project/mak/make.settings 可以存放在其他地方，供多个工程公用。
+这样，当我们需要给所有工作增加新的平台支持，或者对已有平台的某些编译连接参数进行修改，
+只需要修改这一个文件即可。这极大的简化了 Makefile 更新的工作。
+
+-- http://www.ibm.com/developerworks/cn/linux/l-cn-makefile-ext/index.html
+<END>
+

@@ -1,0 +1,53 @@
+ifdef BITS64
+	BITS=64
+else
+	BITS=32
+endif
+
+ifdef DEBUG
+	MODE = debug
+    MODEFLAG = -g -D_DEBUG
+else
+	MODE = release
+	MODEFLAG = -O3 -DNDEBUG
+endif
+
+EXECOMPILE = $(MODEFLAG) -DUNIX
+EXELINK    = $(MODEFLAG)
+
+OSNAME = $(shell uname)
+ifeq ($(OSNAME), AIX)
+	CC = xlC_r
+	EXECOMPILE += -q$(BITS) -c -DAIX
+    LIBCOMPILE = $(EXECOMPILE)
+    EXELINK    += -q$(BITS) -bnoipath
+    LIBLINK    = $(EXELINK) -G
+    LIBSUFFIX = .a
+endif
+ifeq ($(OSNAME), Linux)
+	CC = g++
+    EXECOMPILE += -m$(BITS) -c -DLINUX
+    LIBCOMPILE = $(EXECOMPILE) -fPIC -Wall
+    EXELINK    += -m$(BITS) -fpie
+    LIBLINK    = $(EXELINK) -fPIC -shared
+	LIBSUFFIX = .so
+endif
+#---------------------------------------
+# 在这里增加新的编译器，如:
+#---------------------------------------
+ifeq ($(OSNAME), HP-UX)
+	CC = aCC
+    EXECOMPILE += +DD$(BITS) -c -D_REENTRANT -DHPUX -DHP_UX
+    LIBCOMPILE = $(EXECOMPILE) +Z
+    EXELINK    += -DD$(BITS)
+    LIBLINK    = $(EXELINK) -b +Z
+	LIBSUFFIX = .sl
+endif
+
+PLATFORM=`uname`$(BITS)
+TOPDIR = ../out/$(PLATFORM)/$(MODE)
+BINDIR = $(TOPDIR)/bin
+
+#具体项目这个可以去掉
+LIBNAME = myutil
+
